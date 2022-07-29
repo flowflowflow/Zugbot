@@ -159,6 +159,9 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+#Zugbot properties
+token.properties
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
