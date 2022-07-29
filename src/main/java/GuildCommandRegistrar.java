@@ -104,7 +104,7 @@ public class GuildCommandRegistrar {
         URL url = GuildCommandRegistrar.class.getClassLoader().getResource(commandsFolderName);
         Objects.requireNonNull(url, commandsFolderName + " could not be found");
 
-        
+
         List<String> list = new ArrayList<>();
         try{
             InputStream inputStream = GuildCommandRegistrar.class.getClassLoader().getResourceAsStream(commandsFolderName);
@@ -115,6 +115,7 @@ public class GuildCommandRegistrar {
             while((file = reader.readLine()) != null) {
                 String resourceFileAsString = getResourceFileAsString(commandsFolderName + file);
                 list.add(resourceFileAsString);
+                System.out.println(resourceFileAsString + " added to commands list");
             }
         } catch (Exception e) {
             System.out.println("Error loading files " + e.getMessage());

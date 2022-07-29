@@ -56,18 +56,12 @@ public class DiscordBot {
 
         client.on(ChatInputInteractionEvent.class, event -> {
             /*
-            if(event.getCommandName().equals("ping")) {
-                return event.reply("Pong!");
-            }
-            else if(event.getCommandName().equals("greet")) {
+            if(event.getCommandName().equals("greet")) {
                 String name = event.getOption("name")
                         .flatMap(ApplicationCommandInteractionOption::getValue)
                         .map(ApplicationCommandInteractionOptionValue::asString)
                         .orElse("stranger");
                 return event.reply("Hi " + name + "! Nice to meet you :^)");
-            }
-            else if(event.getCommandName().equals("weather")) {
-                return event.reply("not yet implemented)");
             }*/
 
             if(event.getCommandName().equals("roulette")) {
