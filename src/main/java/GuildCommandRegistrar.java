@@ -3,22 +3,14 @@ import discord4j.discordjson.json.ApplicationCommandData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.RestClient;
 import discord4j.rest.service.ApplicationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import util.IOHelper;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GuildCommandRegistrar {
@@ -107,27 +99,34 @@ public class GuildCommandRegistrar {
         //The name of the folder the commands json is in, inside our resources folder
         final String commandsFolderName = "commands/";
 
+
         //Get the folder as a resource
         URL url = GuildCommandRegistrar.class.getClassLoader().getResource(commandsFolderName);
         Objects.requireNonNull(url, commandsFolderName + " could not be found");
 
-        File folder;
-        try {
-            folder = new File(url.toURI());
-        } catch (URISyntaxException e) {
-            folder = new File(url.getPath());
-        }
-
-        //Get all the files inside this folder and return the contents of the files as a list of strings
+        
         List<String> list = new ArrayList<>();
-        File[] files = Objects.requireNonNull(folder.listFiles(), folder + " is not a directory");
+        try{
+            InputStream inputStream = GuildCommandRegistrar.class.getClassLoader().getResourceAsStream(commandsFolderName);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
-        for (File file : files) {
-            String resourceFileAsString = getResourceFileAsString(commandsFolderName + file.getName());
-            list.add(resourceFileAsString);
+            //Get all the files inside this folder and return the contents of the files as a list of strings
+            String file;
+            while((file = reader.readLine()) != null) {
+                String resourceFileAsString = getResourceFileAsString(commandsFolderName + file);
+                list.add(resourceFileAsString);
+            }
+        } catch (Exception e) {
+            System.out.println("Error loading files " + e.getMessage());
+            System.exit(-1);
         }
+
+
+
         return list;
     }
+
+
 
     /**
      * Gets a specific resource file as String

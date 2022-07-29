@@ -1,25 +1,15 @@
-import com.github.prominence.openweathermap.api.model.onecall.Snow;
-import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.MessageInteractionEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.command.ApplicationCommandInteractionOption;
-import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.entity.Member;
-import discord4j.core.object.entity.Message;
-import discord4j.core.object.entity.User;
-import discord4j.core.object.entity.channel.Channel;
 import discord4j.core.object.reaction.ReactionEmoji;
-import discord4j.voice.VoiceConnection;
 import lombok.extern.java.Log;
 import reactor.core.publisher.Mono;
 import util.IOHelper;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
-import java.util.Optional;
 import java.util.Random;
 import java.util.logging.Level;
 
