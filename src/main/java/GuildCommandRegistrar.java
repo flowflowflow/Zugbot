@@ -9,9 +9,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GuildCommandRegistrar {
@@ -104,18 +105,14 @@ public class GuildCommandRegistrar {
 
 
         //Get the folder as a resource
-        URL url = GuildCommandRegistrar.class.getClassLoader().getResource(commandsFolderName);
-
-        //URLs somehow don't work in jars and display the path asxxx.jar!/yyy/zzz.json
-        //This is a workaround for that
-        JarURLConnection jurl = (JarURLConnection) url.openConnection();
-
-        Objects.requireNonNull(jurl, commandsFolderName + " could not be found");
+        //URL url = GuildCommandRegistrar.class.getResource(commandsFolderName);
+        //Objects.requireNonNull(url, commandsFolderName + " could not be found");
 
 
         List<String> list = new ArrayList<>();
         try{
-            InputStream inputStream = GuildCommandRegistrar.class.getClassLoader().getResourceAsStream(commandsFolderName);
+            //TODO: Fix finding commands folder for InputStream object
+            InputStream inputStream = GuildCommandRegistrar.class.getResourceAsStream(commandsFolderName);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
             //Get all the files inside this folder and return the contents of the files as a list of strings
