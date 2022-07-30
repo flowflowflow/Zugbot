@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,6 +44,8 @@ public class GuildCommandRegistrar {
         //Get our commands json from resources as command data
         Map<String, ApplicationCommandRequest> commands = new HashMap<>();
         for (String json : getCommandsJson()) {
+            System.out.println("Found command json: " + json);
+
             ApplicationCommandRequest request = d4jMapper.getObjectMapper()
                     .readValue(json, ApplicationCommandRequest.class);
 
@@ -102,7 +105,12 @@ public class GuildCommandRegistrar {
 
         //Get the folder as a resource
         URL url = GuildCommandRegistrar.class.getClassLoader().getResource(commandsFolderName);
-        Objects.requireNonNull(url, commandsFolderName + " could not be found");
+
+        //URLs somehow don't work in jars and display the path asxxx.jar!/yyy/zzz.json
+        //This is a workaround for that
+        JarURLConnection jurl = (JarURLConnection) url.openConnection();
+
+        Objects.requireNonNull(jurl, commandsFolderName + " could not be found");
 
 
         List<String> list = new ArrayList<>();
@@ -115,7 +123,7 @@ public class GuildCommandRegistrar {
             while((file = reader.readLine()) != null) {
                 String resourceFileAsString = getResourceFileAsString(commandsFolderName + file);
                 list.add(resourceFileAsString);
-                System.out.println(resourceFileAsString + " added to commands list");
+                //System.out.println(resourceFileAsString + " added to commands list");
             }
         } catch (Exception e) {
             System.out.println("Error loading files " + e.getMessage());
