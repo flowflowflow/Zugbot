@@ -16,12 +16,17 @@ public class GlobalCommandRegistrar {
 
     private final RestClient restClient;
 
+    // The name of the folder the commands json is in, inside our resources folder
+    private static final String commandsFolderName = "commands/";
+
     public GlobalCommandRegistrar(RestClient restClient) {
         this.restClient = restClient;
     }
 
     //Since this will only run once on startup, blocking is okay.
-    protected void registerCommands() throws IOException {
+    protected void registerCommands(List<String> fileNames) throws IOException {
+
+
         //Create an ObjectMapper that supports Discord4J classes
         final JacksonResources d4jMapper = JacksonResources.create();
 
@@ -37,7 +42,7 @@ public class GlobalCommandRegistrar {
 
         //Get our commands json from resources as command data
         Map<String, ApplicationCommandRequest> commands = new HashMap<>();
-        for (String json : getCommandsJson()) {
+        for (String json : getCommandsJson(fileNames)) {
             ApplicationCommandRequest request = d4jMapper.getObjectMapper()
                     .readValue(json, ApplicationCommandRequest.class);
 
@@ -47,7 +52,6 @@ public class GlobalCommandRegistrar {
             if (!discordCommands.containsKey(request.name())) {
                 //Not yet created with discord, let's do it now.
                 applicationService.createGlobalApplicationCommand(applicationId, request).block();
-
             }
         }
 
@@ -111,9 +115,9 @@ public class GlobalCommandRegistrar {
         List<String> list = new ArrayList<>();
         File[] files = Objects.requireNonNull(folder.listFiles(), folder + " is not a directory");
 
-        for (File file : files) {
-            String resourceFileAsString = getResourceFileAsString(commandsFolderName + file.getName());
-            list.add(resourceFileAsString);
+        for (String file : fileNames) {
+            String resourceFileAsString = getResourceFileAsString(commandsFolderName + file);
+            list.add(Objects.requireNonNull(resourceFileAsString, "Command file not found: " + file));
         }
         return list;
     }

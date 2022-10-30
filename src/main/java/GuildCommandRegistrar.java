@@ -9,15 +9,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.URL;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GuildCommandRegistrar {
     private final RestClient restClient;
     private IOHelper io;
+    //Folder the command JSONs are located in
+    private static final String commandsFolderName = "commands/";
 
     public GuildCommandRegistrar(RestClient restClient, IOHelper io) {
         this.restClient = restClient;
@@ -25,7 +25,7 @@ public class GuildCommandRegistrar {
     }
 
     //Since this will only run once on startup, blocking is okay.
-    protected void registerCommands() throws IOException {
+    protected void registerCommands(List<String> fileNames) throws IOException {
         //Create an ObjectMapper that supports Discord4J classes
         final JacksonResources d4jMapper = JacksonResources.create();
 
@@ -44,7 +44,7 @@ public class GuildCommandRegistrar {
 
         //Get our commands json from resources as command data
         Map<String, ApplicationCommandRequest> commands = new HashMap<>();
-        for (String json : getCommandsJson()) {
+        for (String json : getCommandsJson(fileNames)) {
             System.out.println("Found command json: " + json);
 
             ApplicationCommandRequest request = d4jMapper.getObjectMapper()
@@ -99,35 +99,18 @@ public class GuildCommandRegistrar {
 
     /* The two below methods are boilerplate that can be completely removed when using Spring Boot */
 
-    private static List<String> getCommandsJson() throws IOException {
-        //The name of the folder the commands json is in, inside our resources folder
-        final String commandsFolderName = "commands/";
-
-
+    private static List<String> getCommandsJson(List<String> fileNames) throws IOException {
         //Get the folder as a resource
-        //URL url = GuildCommandRegistrar.class.getResource(commandsFolderName);
-        //Objects.requireNonNull(url, commandsFolderName + " could not be found");
+        URL url = GuildCommandRegistrar.class.getClassLoader().getResource(commandsFolderName);
+        Objects.requireNonNull(url, commandsFolderName + " could not be found");
 
-
+        //Get all the files inside this folder and return the contents of the files as a list of strings
         List<String> list = new ArrayList<>();
-        try{
-            //TODO: Fix finding commands folder for InputStream object
-            InputStream inputStream = GuildCommandRegistrar.class.getResourceAsStream(commandsFolderName);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
-            //Get all the files inside this folder and return the contents of the files as a list of strings
-            String file;
-            while((file = reader.readLine()) != null) {
-                String resourceFileAsString = getResourceFileAsString(commandsFolderName + file);
-                list.add(resourceFileAsString);
-                //System.out.println(resourceFileAsString + " added to commands list");
-            }
-        } catch (Exception e) {
-            System.out.println("Error loading files " + e.getMessage());
-            System.exit(-1);
+        for (String file : fileNames) {
+            String resourceFileAsString = getResourceFileAsString(commandsFolderName + file);
+            list.add(Objects.requireNonNull(resourceFileAsString, "Command file not found: " + file));
         }
-
-
 
         return list;
     }
