@@ -1,7 +1,10 @@
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
+import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.MessageInteractionEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.command.ApplicationCommandInteractionOption;
+import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.reaction.ReactionEmoji;
 import lombok.extern.java.Log;
@@ -9,6 +12,7 @@ import reactor.core.publisher.Mono;
 import util.IOHelper;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 
@@ -50,13 +54,13 @@ public class DiscordBot {
 
         try {
             //use guildcommands for testing because they don't have a one-hour delay
-            new GuildCommandRegistrar(client.getRestClient(), io).registerCommands();
+            new GuildCommandRegistrar(client.getRestClient(), io).registerCommands(commands);
             //new GlobalCommandRegistrar(client.getRestClient()).registerCommands();
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed command registration", e);
         }
 
- /*
+
         client.on(ChatInputInteractionEvent.class, event -> {
 
             if(event.getCommandName().equals("greet")) {
@@ -82,7 +86,7 @@ public class DiscordBot {
 
             return Mono.empty();
         }).subscribe();
-*/
+
 
         client.on(MessageInteractionEvent.class, event -> {
             Member member = event.getInteraction().getMember().get();

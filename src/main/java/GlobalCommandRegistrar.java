@@ -3,8 +3,6 @@ import discord4j.discordjson.json.ApplicationCommandData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.RestClient;
 import discord4j.rest.service.ApplicationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -96,7 +94,7 @@ public class GlobalCommandRegistrar {
 
     /* The two below methods are boilerplate that can be completely removed when using Spring Boot */
 
-    private static List<String> getCommandsJson() throws IOException {
+    private static List<String> getCommandsJson(List<String> fileNames) throws IOException {
         //The name of the folder the commands json is in, inside our resources folder
         final String commandsFolderName = "commands/";
 
