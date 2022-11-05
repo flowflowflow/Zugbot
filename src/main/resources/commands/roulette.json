@@ -1,4 +1,12 @@
 {
   "name": "roulette",
-  "description": "one will be gone... or not"
+  "description": "May or may not do something to the specified user from the server",
+  "options": [
+    {
+      "name": "name",
+      "description": "Target user",
+      "type": 6,
+      "required": true
+    }
+  ]
 }

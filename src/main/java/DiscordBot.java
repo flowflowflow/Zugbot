@@ -6,7 +6,8 @@ import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.entity.Member;
-import discord4j.core.object.reaction.ReactionEmoji;
+import discord4j.core.object.entity.User;
+import listeners.MessageInteractionListener;
 import lombok.extern.java.Log;
 import reactor.core.publisher.Mono;
 import util.IOHelper;
@@ -72,53 +73,27 @@ public class DiscordBot {
             }
 
             if(event.getCommandName().equals("roulette")) {
-                Double rndDouble = random.nextDouble();
+                int rndInt = random.nextInt(100) + 1;
                 String userId = event.getInteraction().getMember().get().getId().asString();
-                Member member = event.getInteraction().getMember().get();
+
+                Mono<User> user = event.getOption("name")
+                        .flatMap(ApplicationCommandInteractionOption::getValue)
+                        .map(ApplicationCommandInteractionOptionValue::asUser).get();
+
+
+
 
                 System.out.println("command sender: " +  userId);
-                System.out.println("rolled a: " +  rndDouble);
-
-                if(rndDouble < 0.9) {
-
-                }
-            }
-
-            return Mono.empty();
-        }).subscribe();
-
-
-        client.on(MessageInteractionEvent.class, event -> {
-            Member member = event.getInteraction().getMember().get();
-            String memberName = member.getDisplayName();
-
-            if (event.getCommandName().equals("Cringe")) {
-                System.out.println("New cringe issued by " + memberName);
-                return event.deferReply().withEphemeral(true)
-                        .then(event.getTargetMessage())
-                        .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDE8")))
-                        .then(event.getTargetMessage())
-                        .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDF7")))
-                        .then(event.getTargetMessage())
-                        .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDEE")))
-                        .then(event.getTargetMessage())
-                        .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDF3")))
-                        .then(event.getTargetMessage())
-                        .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDEC")))
-                        .then(event.getTargetMessage())
-                        .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDEA")))
-                        .then(event.editReply("Done!"));
             }
             return Mono.empty();
         }).subscribe();
+
+        client.on(MessageInteractionEvent.class, MessageInteractionListener::handle);
 
         client.on(MessageCreateEvent.class, event -> {
             Member member = event.getMember().get();
             String memberId = member.getId().asString();
-            System.out.println("New message from " + member.getDisplayName() + " / " + member.getNickname().get().toString() +  " / " + memberId);
-
-            member = null;
-            memberId = null;
+            System.out.println("New message from " + member.getDisplayName() + " / " + member.getNickname().get() +  " / " + memberId);
             return Mono.empty();
         }).subscribe();
 
