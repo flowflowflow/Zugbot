@@ -7,7 +7,7 @@ import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.User;
-import listeners.MessageInteractionListener;
+import listeners.MessageCommandListener;
 import lombok.extern.java.Log;
 import reactor.core.publisher.Mono;
 import util.IOHelper;
@@ -88,7 +88,7 @@ public class DiscordBot {
             return Mono.empty();
         }).subscribe();
 
-        client.on(MessageInteractionEvent.class, MessageInteractionListener::handle);
+        client.on(MessageInteractionEvent.class, MessageCommandListener::handle);
 
         client.on(MessageCreateEvent.class, event -> {
             Member member = event.getMember().get();

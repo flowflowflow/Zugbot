@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageInteractionListener {
+public class MessageCommandListener {
     private final static List<MessageCommand> commands = new ArrayList<>();
 
     static {
