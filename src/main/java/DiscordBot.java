@@ -3,11 +3,9 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.MessageInteractionEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.command.ApplicationCommandInteractionOption;
-import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.entity.Member;
-import discord4j.core.object.entity.User;
 import listeners.MessageCommandListener;
+import listeners.SlashCommandListener;
 import lombok.extern.java.Log;
 import reactor.core.publisher.Mono;
 import util.IOHelper;
@@ -61,43 +59,19 @@ public class DiscordBot {
             log.log(Level.WARNING, "Failed command registration", e);
         }
 
-
-        client.on(ChatInputInteractionEvent.class, event -> {
-
-            if(event.getCommandName().equals("greet")) {
-                String name = event.getOption("name")
-                        .flatMap(ApplicationCommandInteractionOption::getValue)
-                        .map(ApplicationCommandInteractionOptionValue::asString)
-                        .orElse("stranger");
-                return event.reply("Hi " + name + "! Nice to meet you :^)");
-            }
-
-            if(event.getCommandName().equals("roulette")) {
-                int rndInt = random.nextInt(100) + 1;
-                String userId = event.getInteraction().getMember().get().getId().asString();
-
-                Mono<User> user = event.getOption("name")
-                        .flatMap(ApplicationCommandInteractionOption::getValue)
-                        .map(ApplicationCommandInteractionOptionValue::asUser).get();
-
-
-
-
-                System.out.println("command sender: " +  userId);
-            }
-            return Mono.empty();
-        }).subscribe();
-
-        client.on(MessageInteractionEvent.class, MessageCommandListener::handle);
-
         client.on(MessageCreateEvent.class, event -> {
             Member member = event.getMember().get();
             String memberId = member.getId().asString();
             System.out.println("New message from " + member.getDisplayName() + " / " + member.getNickname().get() +  " / " + memberId);
+            member = null;
+            memberId = null;
             return Mono.empty();
         }).subscribe();
 
-        client.onDisconnect().block();
+        client.on(ChatInputInteractionEvent.class, SlashCommandListener::handle).subscribe();
 
+        client.on(MessageInteractionEvent.class, MessageCommandListener::handle)
+                .then(client.onDisconnect())
+                .block();
     }
 }

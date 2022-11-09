@@ -18,23 +18,20 @@ public class CringeCommand implements MessageCommand {
         Member member = event.getInteraction().getMember().get();
         String memberName = member.getDisplayName();
 
-        if (event.getCommandName().equals("Cringe")) {
-            System.out.println("New cringe issued by " + memberName);
-            return event.deferReply().withEphemeral(true)
-                    .then(event.getTargetMessage())
-                    .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDE8")))
-                    .then(event.getTargetMessage())
-                    .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDF7")))
-                    .then(event.getTargetMessage())
-                    .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDEE")))
-                    .then(event.getTargetMessage())
-                    .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDF3")))
-                    .then(event.getTargetMessage())
-                    .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDEC")))
-                    .then(event.getTargetMessage())
-                    .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDEA")))
-                    .then(event.editReply("Done!"));
-        }
-        return Mono.empty();
+        System.out.println("New cringe issued by " + memberName);
+        return event.deferReply().withEphemeral(true)
+                .then(event.getTargetMessage())
+                .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDE8")))
+                .then(event.getTargetMessage())
+                .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDF7")))
+                .then(event.getTargetMessage())
+                .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDEE")))
+                .then(event.getTargetMessage())
+                .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDF3")))
+                .then(event.getTargetMessage())
+                .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDEC")))
+                .then(event.getTargetMessage())
+                .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDEA")))
+                .then(event.editReply("Done!"));
     }
 }
