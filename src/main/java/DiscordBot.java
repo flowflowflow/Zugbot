@@ -2,12 +2,9 @@ import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.MessageInteractionEvent;
-import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.entity.Member;
 import listeners.MessageCommandListener;
 import listeners.SlashCommandListener;
 import lombok.extern.java.Log;
-import reactor.core.publisher.Mono;
 import util.IOHelper;
 
 import java.io.IOException;
@@ -21,7 +18,7 @@ public class DiscordBot {
 
         // hard coded list of available commands in /resources/commands
         // see https://github.com/Discord4J/example-projects/commit/567ec1c432d9fb7457423e3950a4c2e2ec87319f
-        final List<String> commands = List.of("greet.json", "ping.json", "roulette.json", "cringe.json", "weather.json");
+        final List<String> commands = List.of("greet.json", "ping.json", "roulette.json", "cringe.json", "weather.json", "play.json");
 
         String discordApiToken = null;
         String owmApiToken = null;
@@ -59,14 +56,14 @@ public class DiscordBot {
             log.log(Level.WARNING, "Failed command registration", e);
         }
 
+        /*
         client.on(MessageCreateEvent.class, event -> {
             Member member = event.getMember().get();
             String memberId = member.getId().asString();
             System.out.println("New message from " + member.getDisplayName() + " / " + member.getNickname().get() +  " / " + memberId);
-            member = null;
-            memberId = null;
             return Mono.empty();
         }).subscribe();
+         */
 
         client.on(ChatInputInteractionEvent.class, SlashCommandListener::handle).subscribe();
 

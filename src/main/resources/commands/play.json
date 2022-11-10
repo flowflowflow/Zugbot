@@ -1,0 +1,12 @@
+{
+  "name": "play",
+  "description": "Play a song from YouTube",
+  "options": [
+    {
+      "name": "input",
+      "description": "A YouTube link",
+      "type": 3,
+      "required": true
+    }
+  ]
+}
