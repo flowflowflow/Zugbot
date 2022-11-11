@@ -6,11 +6,11 @@ import discord4j.core.object.entity.Message;
 import discord4j.core.object.reaction.ReactionEmoji;
 import reactor.core.publisher.Mono;
 
-public class CringeCommand implements MessageCommand {
+public class UncringeCommand implements MessageCommand {
 
     @Override
     public String getName() {
-        return "Cringe";
+        return "Uncringe";
     }
 
     @Override
@@ -18,20 +18,21 @@ public class CringeCommand implements MessageCommand {
         Member member = event.getInteraction().getMember().get();
         String memberName = member.getDisplayName();
 
-        System.out.println("New cringe issued by " + memberName);
-        return event.deferReply().withEphemeral(true)
+        System.out.println("New uncringe issued by " + memberName);
+        return event.deferReply()
+                .withEphemeral(true)
                 .then(event.getTargetMessage())
-                .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDE8")))
+                .flatMap(it -> it.removeSelfReaction(ReactionEmoji.unicode("\uD83C\uDDE8")))
                 .then(event.getTargetMessage())
-                .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDF7")))
+                .flatMap(it -> it.removeSelfReaction(ReactionEmoji.unicode("\uD83C\uDDF7")))
                 .then(event.getTargetMessage())
-                .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDEE")))
+                .flatMap(it -> it.removeSelfReaction(ReactionEmoji.unicode("\uD83C\uDDEE")))
                 .then(event.getTargetMessage())
-                .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDF3")))
+                .flatMap(it -> it.removeSelfReaction(ReactionEmoji.unicode("\uD83C\uDDF3")))
                 .then(event.getTargetMessage())
-                .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDEC")))
+                .flatMap(it -> it.removeSelfReaction(ReactionEmoji.unicode("\uD83C\uDDEC")))
                 .then(event.getTargetMessage())
-                .flatMap(it -> it.addReaction(ReactionEmoji.unicode("\uD83C\uDDEA")))
+                .flatMap(it -> it.removeSelfReaction(ReactionEmoji.unicode("\uD83C\uDDEA")))
                 .then(event.editReply("Done!"));
     }
 }

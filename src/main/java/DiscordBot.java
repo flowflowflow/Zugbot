@@ -50,8 +50,8 @@ public class DiscordBot {
 
         try {
             //use guildcommands for testing because they don't have a one-hour delay
-            new GuildCommandRegistrar(client.getRestClient(), io).registerCommands(commands);
             //new GlobalCommandRegistrar(client.getRestClient()).registerCommands();
+            new GuildCommandRegistrar(client.getRestClient(), io).registerCommands(commands);
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed command registration", e);
         }

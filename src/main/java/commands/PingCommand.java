@@ -6,7 +6,7 @@ import reactor.core.publisher.Mono;
 public class PingCommand implements SlashCommand {
     @Override
     public String getName() {
-        return "ping";
+        return "Ping";
     }
 
     @Override
