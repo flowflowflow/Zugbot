@@ -1,5 +1,5 @@
 {
-  "name": "Greet",
+  "name": "greet",
   "description": "greets you",
   "options": [
     {

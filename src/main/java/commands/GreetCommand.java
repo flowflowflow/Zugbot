@@ -8,7 +8,7 @@ public class GreetCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "Greet";
+        return "greet";
     }
 
     @Override

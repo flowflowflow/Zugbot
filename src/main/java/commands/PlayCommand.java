@@ -8,7 +8,7 @@ public class PlayCommand implements SlashCommand {
 
     @Override
     public String getName() {
-        return "Play";
+        return "play";
     }
 
     @Override

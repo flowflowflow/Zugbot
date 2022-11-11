@@ -11,7 +11,7 @@ import java.util.Random;
 public class RouletteCommand implements SlashCommand {
     @Override
     public String getName() {
-        return "Roulette";
+        return "roulette";
     }
 
     @Override

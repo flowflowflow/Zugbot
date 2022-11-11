@@ -18,7 +18,7 @@ public class DiscordBot {
 
         // hard coded list of available commands in /resources/commands
         // see https://github.com/Discord4J/example-projects/commit/567ec1c432d9fb7457423e3950a4c2e2ec87319f
-        final List<String> commands = List.of("greet.json", "ping.json", "roulette.json", "cringe.json", "weather.json", "play.json");
+        final List<String> commands = List.of("greet.json", "ping.json", "roulette.json", "cringe.json", "weather.json", "play.json", "uncringe.json");
 
         String discordApiToken = null;
         String owmApiToken = null;

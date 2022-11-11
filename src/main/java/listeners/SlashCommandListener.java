@@ -14,9 +14,9 @@ public class SlashCommandListener {
     static {
         commands.add(new GreetCommand());
         commands.add(new PingCommand());
-        commands.add(new RouletteCommand());
-        commands.add(new WeatherCommand());
-        commands.add(new PlayCommand());
+        //commands.add(new RouletteCommand());
+        //commands.add(new WeatherCommand());
+        //commands.add(new PlayCommand());
     }
 
     public static Mono<Void> handle(ChatInputInteractionEvent event) {
