@@ -58,6 +58,12 @@
             <artifactId>openweathermap-api</artifactId>
             <version>2.3.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.kylejablonski</groupId>
+            <artifactId>simple-giphy-java</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>

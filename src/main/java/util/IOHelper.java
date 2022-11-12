@@ -2,8 +2,6 @@ package util;
 
 import lombok.extern.java.Log;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -66,5 +64,9 @@ public class IOHelper {
      */
     public String readRitoApiToken() {
         return prop.getProperty("riot_api_token");
+    }
+
+    public String readGiphyApiToken() {
+        return prop.getProperty("giphy_api_token");
     }
 }
