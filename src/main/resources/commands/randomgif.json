@@ -4,7 +4,7 @@
   "options": [
     {
       "name": "keyword",
-      "description": "Keyword that is random gif search",
+      "description": "Keyword that is used for random gif search",
       "type": 3,
       "required": false
     }
