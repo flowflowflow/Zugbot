@@ -1,4 +1,12 @@
 {
   "name": "randomgif",
-  "description": "Sends a random GIF"
+  "description": "Sends a random GIF",
+  "options": [
+    {
+      "name": "keyword",
+      "description": "Keyword that is random gif search",
+      "type": 3,
+      "required": false
+    }
+  ]
 }
