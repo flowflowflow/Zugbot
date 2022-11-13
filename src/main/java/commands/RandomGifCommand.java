@@ -1,15 +1,14 @@
 package commands;
 
 import com.kdotj.simplegiphy.SimpleGiphy;
-import com.kdotj.simplegiphy.data.Giphy;
-import com.kdotj.simplegiphy.data.GiphyListResponse;
+import com.kdotj.simplegiphy.data.RandomGiphy;
+import com.kdotj.simplegiphy.data.RandomGiphyResponse;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import lombok.extern.java.Log;
 import reactor.core.publisher.Mono;
 import util.IOHelper;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Level;
 
 @Log
@@ -28,14 +27,11 @@ public class RandomGifCommand implements SlashCommand {
 
             SimpleGiphy.setApiKey(giphyApiKey);
             SimpleGiphy giphy = SimpleGiphy.getInstance();
-            GiphyListResponse randomGiphyResponse = giphy.trending("1", "pg-13");
-            List<Giphy> trendingList = randomGiphyResponse.getData();
-            String url = trendingList.get(0).getUrl();
 
-            System.out.println("RandomGIF request URL: " + url);
+            RandomGiphyResponse randomGiphyResponse = giphy.random("", "r");
+            RandomGiphy randomGiphy = randomGiphyResponse.getRandomGiphy();
 
-            //todo use random isntead of trending
-            return event.reply(url);
+            return event.reply(randomGiphy.getUrl());
 
         } catch (IOException e) {
             log.log(Level.WARNING, "Failed to create IOHelper instance");
