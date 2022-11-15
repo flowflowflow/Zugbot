@@ -33,7 +33,7 @@ public class AddServerCommand implements SlashCommand {
                 .map(ApplicationCommandInteractionOptionValue::asString)
                 .get();
 
-        String connectionDetails = event.getOption("connection details")
+        String connectionDetails = event.getOption("ip")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
                 .get();
@@ -41,7 +41,7 @@ public class AddServerCommand implements SlashCommand {
         String password = event.getOption("password")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
-                .get();
+                .orElse("");
 
         String preset = event.getOption("preset")
                 .flatMap(ApplicationCommandInteractionOption::getValue)

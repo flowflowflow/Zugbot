@@ -15,7 +15,7 @@
       "required": true
     },
     {
-      "name": "connection details",
+      "name": "ip",
       "description": "IP / URL + port of the server",
       "type": 3,
       "required": true
