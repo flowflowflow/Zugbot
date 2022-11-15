@@ -21,7 +21,7 @@ public class DiscordBot {
         final List<String> commands = List.of("greet.json", "ping.json", "roulette.json",
                 "cringe.json", "weather.json", "play.json",
                 "uncringe.json", "randomgif.json",
-                "addserver");
+                "addserver.json");
 
         String discordApiToken = null;
         String owmApiToken = null;
