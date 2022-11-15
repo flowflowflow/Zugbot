@@ -4,15 +4,14 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.MessageInteractionEvent;
 import listeners.MessageCommandListener;
 import listeners.SlashCommandListener;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import util.IOHelper;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
 
-@Log
+@Slf4j
 public class DiscordBot {
     public static void main(String[] args) {
 
@@ -43,7 +42,7 @@ public class DiscordBot {
             appId = io.readAppId();
 
         } catch (IOException e) {
-            log.log(Level.SEVERE, "Failed to load properties", e);
+            log.error("Failed to load properties", e);
             System.exit(-1);
         }
 
@@ -56,7 +55,7 @@ public class DiscordBot {
             //new GlobalCommandRegistrar(client.getRestClient()).registerCommands();
             new GuildCommandRegistrar(client.getRestClient(), io).registerCommands(commands);
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed command registration", e);
+            log.error("Failed command registration", e);
         }
 
         client.on(ChatInputInteractionEvent.class, SlashCommandListener::handle).subscribe();

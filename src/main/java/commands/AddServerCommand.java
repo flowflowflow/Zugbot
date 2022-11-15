@@ -7,10 +7,12 @@ import discord4j.core.object.entity.channel.GuildMessageChannel;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 
+@Slf4j
 public class AddServerCommand implements SlashCommand {
 
     @Override
@@ -41,11 +43,12 @@ public class AddServerCommand implements SlashCommand {
         String password = event.getOption("password")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
-                .orElse("");
+                .get();
 
         String preset = event.getOption("preset")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
-                .map(ApplicationCommandInteractionOptionValue::asString).orElse("default");
+                .map(ApplicationCommandInteractionOptionValue::asString)
+                .get();
 
 
 
@@ -67,7 +70,7 @@ public class AddServerCommand implements SlashCommand {
             case "minecraft":
                 embed = EmbedCreateSpec
                         .builder()
-                        .color(Color.BISMARK)
+                        .color(Color.MEDIUM_SEA_GREEN)
                         .title(title)
                         .author("Zugbot", "https://discord4j.com", "https://cdn.discordapp.com/attachments/1042034256286863410/1042059572363411577/Md3E3Sp_-_Copy.png")
                         .description(description)
@@ -79,9 +82,10 @@ public class AddServerCommand implements SlashCommand {
                         .build();
                 break;
             default:
+                preset = "default";
                 embed = EmbedCreateSpec
                         .builder()
-                        .color(Color.BISMARK)
+                        .color(Color.RED)
                         .title(title)
                         .author("Zugbot", "https://discord4j.com", "https://cdn.discordapp.com/attachments/1042034256286863410/1042059572363411577/Md3E3Sp_-_Copy.png")
                         .description(description)
@@ -93,7 +97,7 @@ public class AddServerCommand implements SlashCommand {
         }
 
         channel.ofType(GuildMessageChannel.class).flatMap(messageChannel -> messageChannel.createMessage(embed)).subscribe();
-
+        log.info("New " + preset + " embed created!");
         return event.reply().withEphemeral(true).withContent("Embed created!");
     }
 }

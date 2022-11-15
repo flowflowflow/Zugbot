@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.discord4j</groupId>
             <artifactId>discord4j-core</artifactId>
-            <version>3.2.2</version>
+            <version>3.2.3</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
@@ -63,6 +63,12 @@
             <groupId>com.github.kylejablonski</groupId>
             <artifactId>simple-giphy-java</artifactId>
             <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.4</version>
         </dependency>
     </dependencies>
 

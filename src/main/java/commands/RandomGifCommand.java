@@ -6,14 +6,13 @@ import com.kdotj.simplegiphy.data.RandomGiphyResponse;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import util.IOHelper;
 
 import java.io.IOException;
-import java.util.logging.Level;
 
-@Log
+@Slf4j
 public class RandomGifCommand implements SlashCommand {
 
     @Override
@@ -38,14 +37,14 @@ public class RandomGifCommand implements SlashCommand {
             RandomGiphyResponse randomGiphyResponse = giphy.random(searchTerm, "r");
 
             if (randomGiphyResponse == null) {
-                log.log(Level.WARNING, "Failed deserialization of Giphy response");
+                log.error("Failed deserialization of Giphy response");
                 return event.reply("Sorry, gifs for the keyword couldn't be found :(");
             } else {
                 RandomGiphy randomGiphy = randomGiphyResponse.getRandomGiphy();
                 return event.reply(randomGiphy.getUrl());
             }
         } catch (IOException e) {
-            log.log(Level.WARNING, "Failed to create IOHelper instance");
+            log.error("Failed to create IOHelper instance", e);
             return event.reply("Sorry, that didn't work out as planned :(");
         }
     }

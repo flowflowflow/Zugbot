@@ -61,7 +61,7 @@ public class GuildCommandRegistrar {
 
         //Check if any commands have been deleted or changed.
         for (ApplicationCommandData discordCommand : discordCommands.values()) {
-            long discordCommandId = Long.parseLong(discordCommand.id());
+            long discordCommandId = Long.parseLong(String.valueOf(discordCommand.id()));
 
             ApplicationCommandRequest command = commands.get(discordCommand.name());
 
@@ -74,7 +74,6 @@ public class GuildCommandRegistrar {
             //Check if the command has been changed and needs to be updated.
             if (hasChanged(discordCommand, command)) {
                 applicationService.modifyGuildApplicationCommand(applicationId, guildId, discordCommandId, command).block();
-
             }
         }
     }

@@ -22,15 +22,15 @@
     },
     {
       "name": "password",
-      "description": "password for the server",
+      "description": "Password for the server",
       "type": 3,
-      "required": false
+      "required": true
     },
     {
       "name": "preset",
-      "description": "Preset type (Valheim, Minecraft)",
+      "description": "Preset type (Valheim, Minecraft). Anything else defaults to a standard Embed",
       "type": 3,
-      "required": false
+      "required": true
     }
   ]
 }

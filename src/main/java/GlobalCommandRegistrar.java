@@ -3,6 +3,7 @@ import discord4j.discordjson.json.ApplicationCommandData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.RestClient;
 import discord4j.rest.service.ApplicationService;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -10,6 +11,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class GlobalCommandRegistrar {
 
     private final RestClient restClient;
@@ -23,8 +25,6 @@ public class GlobalCommandRegistrar {
 
     //Since this will only run once on startup, blocking is okay.
     protected void registerCommands(List<String> fileNames) throws IOException {
-
-
         //Create an ObjectMapper that supports Discord4J classes
         final JacksonResources d4jMapper = JacksonResources.create();
 
@@ -32,46 +32,22 @@ public class GlobalCommandRegistrar {
         final ApplicationService applicationService = restClient.getApplicationService();
         final long applicationId = restClient.getApplicationId().block();
 
-        //These are commands already registered with discord from previous runs of the bot.
-        Map<String, ApplicationCommandData> discordCommands = applicationService
-                .getGlobalApplicationCommands(applicationId)
-                .collectMap(ApplicationCommandData::name)
-                .block();
-
         //Get our commands json from resources as command data
-        Map<String, ApplicationCommandRequest> commands = new HashMap<>();
+        List<ApplicationCommandRequest> commands = new ArrayList<>();
         for (String json : getCommandsJson(fileNames)) {
             ApplicationCommandRequest request = d4jMapper.getObjectMapper()
                     .readValue(json, ApplicationCommandRequest.class);
 
-            commands.put(request.name(), request); //Add to our array list
-
-            //Check if this is a new command that has not already been registered.
-            if (!discordCommands.containsKey(request.name())) {
-                //Not yet created with discord, let's do it now.
-                applicationService.createGlobalApplicationCommand(applicationId, request).block();
-            }
+            commands.add(request); //Add to our array list
         }
 
-        //Check if any commands have been deleted or changed.
-        for (ApplicationCommandData discordCommand : discordCommands.values()) {
-            long discordCommandId = Long.parseLong(discordCommand.id());
-
-            ApplicationCommandRequest command = commands.get(discordCommand.name());
-
-            if (command == null) {
-                //Removed command.json, delete global command
-                applicationService.deleteGlobalApplicationCommand(applicationId, discordCommandId).block();
-
-                continue; //Skip further processing on this command.
-            }
-
-            //Check if the command has been changed and needs to be updated.
-            if (hasChanged(discordCommand, command)) {
-                applicationService.modifyGlobalApplicationCommand(applicationId, discordCommandId, command).block();
-
-            }
-        }
+        /* Bulk overwrite commands. This is now idempotent, so it is safe to use this even when only 1 command
+        is changed/added/removed
+        */
+        applicationService.bulkOverwriteGlobalApplicationCommand(applicationId, commands)
+                .doOnNext(cmd -> log.debug("Successfully registered Global Command " + cmd.name()))
+                .doOnError(e -> log.error("Failed to register global commands", e))
+                .subscribe();
     }
 
 

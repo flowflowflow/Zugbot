@@ -1,21 +1,20 @@
 package util;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-@Log
+@Slf4j
 public class IOHelper {
 
     Properties prop = new Properties();
 
     public IOHelper() throws IOException {
-        //final String propFile = "src/main/resources/token.properties";
-        //final String propFile = "token.properties";
         InputStream input = IOHelper.class.getClassLoader().getResourceAsStream("token.properties");
         prop.load(input);
+        log.info("token.properties loaded");
     }
 
 
