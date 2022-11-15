@@ -20,7 +20,8 @@ public class DiscordBot {
         // see https://github.com/Discord4J/example-projects/commit/567ec1c432d9fb7457423e3950a4c2e2ec87319f
         final List<String> commands = List.of("greet.json", "ping.json", "roulette.json",
                 "cringe.json", "weather.json", "play.json",
-                "uncringe.json", "randomgif.json");
+                "uncringe.json", "randomgif.json",
+                "addserver");
 
         String discordApiToken = null;
         String owmApiToken = null;
@@ -57,15 +58,6 @@ public class DiscordBot {
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed command registration", e);
         }
-
-        /*
-        client.on(MessageCreateEvent.class, event -> {
-            Member member = event.getMember().get();
-            String memberId = member.getId().asString();
-            System.out.println("New message from " + member.getDisplayName() + " / " + member.getNickname().get() +  " / " + memberId);
-            return Mono.empty();
-        }).subscribe();
-         */
 
         client.on(ChatInputInteractionEvent.class, SlashCommandListener::handle).subscribe();
 

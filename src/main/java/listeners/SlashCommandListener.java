@@ -15,6 +15,8 @@ public class SlashCommandListener {
         commands.add(new GreetCommand());
         commands.add(new PingCommand());
         commands.add(new RandomGifCommand());
+        commands.add(new AddServerCommand());
+
         //commands.add(new RouletteCommand());
         //commands.add(new WeatherCommand());
         //commands.add(new PlayCommand());

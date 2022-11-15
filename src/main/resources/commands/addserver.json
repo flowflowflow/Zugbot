@@ -1,0 +1,36 @@
+{
+  "name": "addserver",
+  "description": "Creates a non-dynamic embed for game servers",
+  "options": [
+    {
+      "name": "servername",
+      "description": "Name of the Server",
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "description",
+      "description": "Name of the Server",
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "connection details",
+      "description": "IP / URL + port of the server",
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "password",
+      "description": "password for the server",
+      "type": 3,
+      "required": false
+    },
+    {
+      "name": "preset",
+      "description": "Preset type (Valheim, Minecraft)",
+      "type": 3,
+      "required": false
+    }
+  ]
+}
