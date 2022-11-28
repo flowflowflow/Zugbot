@@ -1,0 +1,28 @@
+{
+  "name": "matchhistory",
+  "description": "Shows match history for the specified user",
+  "options": [
+    {
+      "name": "riot_id",
+      "description": "Target Riot ID (Player#1234)",
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "game",
+      "description": "Game type",
+      "type": 3,
+      "required": true,
+      "choices": [
+        {
+          "name": "Valorant",
+          "value": "game_valorant"
+        },
+        {
+          "name": "LoL",
+          "value": "game_lol"
+        }
+      ]
+    }
+  ]
+}

@@ -19,7 +19,7 @@ public class DiscordBot {
         final List<String> commands = List.of("greet.json", "ping.json", "roulette.json",
                 "cringe.json", "weather.json", "play.json",
                 "uncringe.json", "randomgif.json",
-                "addserver.json");
+                "addserver.json", "matchhistory.json");
 
         Random random = new Random();
 
