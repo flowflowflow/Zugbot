@@ -5,9 +5,8 @@ import discord4j.core.event.domain.interaction.MessageInteractionEvent;
 import listeners.MessageCommandListener;
 import listeners.SlashCommandListener;
 import lombok.extern.slf4j.Slf4j;
-import util.IOHelper;
+import util.Constants;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -22,29 +21,13 @@ public class DiscordBot {
                 "uncringe.json", "randomgif.json",
                 "addserver.json");
 
-        String discordApiToken = null;
-        String owmApiToken = null;
-        String ritoApiToken = null;
-        long guildId = 0L;
-        long appId = 0L;
-
-        IOHelper io = null;
         Random random = new Random();
 
-        try {
-            io = new IOHelper();
-
-
-            discordApiToken = io.readDiscordApiToken();
-            owmApiToken = io.readOwmApiToken();
-            ritoApiToken = io.readRitoApiToken();
-            guildId = io.readGuildId();
-            appId = io.readAppId();
-
-        } catch (IOException e) {
-            log.error("Failed to load properties", e);
-            System.exit(-1);
-        }
+        String discordApiToken = Constants.DISCORD_API_TOKEN.value;
+        String owmApiToken = Constants.OWM_API_TOKEN.value;
+        String ritoApiToken = Constants.RIOT_API_TOKEN.value;
+        long guildId = Long.parseLong(Constants.GUILD_ID.value);
+        long appId = Long.parseLong(Constants.APP_ID.value);
 
         log.info("Bot token: " + discordApiToken + " GuildID: " + guildId);
 
@@ -53,7 +36,7 @@ public class DiscordBot {
         try {
             //use guildcommands for testing because they don't have a one-hour delay
             //new GlobalCommandRegistrar(client.getRestClient()).registerCommands();
-            new GuildCommandRegistrar(client.getRestClient(), io).registerCommands(commands);
+            new GuildCommandRegistrar(client.getRestClient()).registerCommands(commands);
         } catch (Exception e) {
             log.error("Failed command registration", e);
         }

@@ -3,7 +3,7 @@ import discord4j.discordjson.json.ApplicationCommandData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.RestClient;
 import discord4j.rest.service.ApplicationService;
-import util.IOHelper;
+import util.Constants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,13 +15,11 @@ import java.util.stream.Collectors;
 
 public class GuildCommandRegistrar {
     private final RestClient restClient;
-    private IOHelper io;
     //Folder the command JSONs are located in
     private static final String commandsFolderName = "commands/";
 
-    public GuildCommandRegistrar(RestClient restClient, IOHelper io) {
+    public GuildCommandRegistrar(RestClient restClient) {
         this.restClient = restClient;
-        this.io = io;
     }
 
     //Since this will only run once on startup, blocking is okay.
@@ -32,7 +30,7 @@ public class GuildCommandRegistrar {
         // Convenience variables for the sake of easier to read code below
         final ApplicationService applicationService = restClient.getApplicationService();
         final long applicationId = restClient.getApplicationId().block();
-        final long guildId = io.readGuildId();
+        final long guildId = Long.parseLong(Constants.GUILD_ID.value);
 
         //These are commands already registered with discord from previous runs of the bot
         //Bot needs permission to create commands
