@@ -16,9 +16,9 @@ public class SlashCommandListener {
         commands.add(new PingCommand());
         commands.add(new RandomGifCommand());
         commands.add(new AddServerCommand());
-        commands.add(new MatchHistoryCommand());
+        //commands.add(new MatchHistoryCommand());
+        commands.add(new RouletteCommand());
 
-        //commands.add(new RouletteCommand());
         //commands.add(new WeatherCommand());
         //commands.add(new PlayCommand());
     }
