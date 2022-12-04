@@ -7,13 +7,13 @@ import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.channel.VoiceChannel;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import util.Constants;
 
 import java.util.Random;
 
-@Log
+@Slf4j
 public class RouletteCommand implements SlashCommand {
     @Override
     public String getName() {
@@ -25,6 +25,7 @@ public class RouletteCommand implements SlashCommand {
         Random random = new Random();
 
         int rndInt = random.nextInt(100) + 1;
+        log.info("Roulette roll: " +  rndInt);
 
         String commandSender = event.getInteraction().getMember().get().getDisplayName();
 
@@ -39,9 +40,14 @@ public class RouletteCommand implements SlashCommand {
         if(voiceState != null) {
             final VoiceChannel channel = voiceState.getChannel().block();
             if(channel != null) {
-                if(rndInt < 20) {
+                if(member.getId().asString().equals("509384367307751424")) {
+                    if(rndInt % 2 == 0) {
+                        member.edit().withNewVoiceChannelOrNull(null).block();
+                        return event.reply().withContent(commandSender + " hat die Zahl " + rndInt + " gewürfelt. Das bedeutet " + member.getDisplayName() + " wurde endlich erschossen. Fick dich Tom");
+                    }
+                }
+                if(rndInt <= 20) {
                     member.edit().withNewVoiceChannelOrNull(null).block();
-
                     return event.reply().withContent(commandSender + " hat die Zahl " + rndInt + " gewürfelt. Das bedeutet " + member.getDisplayName() + " wurde erschossen. RIP Bozo");
                 }
             }
