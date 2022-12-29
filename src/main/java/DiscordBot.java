@@ -1,14 +1,15 @@
+import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.MessageInteractionEvent;
+import discord4j.core.object.entity.channel.MessageChannel;
 import listeners.MessageCommandListener;
 import listeners.SlashCommandListener;
 import lombok.extern.slf4j.Slf4j;
 import util.Constants;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Slf4j
 public class DiscordBot {
@@ -40,6 +41,20 @@ public class DiscordBot {
         } catch (Exception e) {
             log.error("Failed command registration", e);
         }
+
+        //Daily Rizzsczenski
+        Date date=new Date();
+        Timer timer = new Timer();
+
+        timer.schedule(new TimerTask(){
+            public void run(){
+                MessageChannel channel = (MessageChannel) client.getChannelById(Snowflake.of(509398215074775049l)).block();
+                channel.createMessage("Daily Rizzsczenski post <a:Nerdge:1037714990985138186>").block();
+                channel.createMessage("https://cdn.discordapp.com/attachments/1042034256286863410/1058083626232860712/Rizzsczenski.png").block();
+
+                log.info("Scheduler created daily rizzsczenski message");
+            }
+        },date, 24*60*60*1000);
 
         client.on(ChatInputInteractionEvent.class, SlashCommandListener::handle).subscribe();
 
