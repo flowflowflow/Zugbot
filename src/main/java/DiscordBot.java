@@ -8,6 +8,7 @@ import listeners.MessageCommandListener;
 import listeners.SlashCommandListener;
 import lombok.extern.slf4j.Slf4j;
 import util.Constants;
+import util.RizzImages;
 
 import java.util.*;
 
@@ -50,7 +51,7 @@ public class DiscordBot {
             public void run(){
                 MessageChannel channel = (MessageChannel) client.getChannelById(Snowflake.of(509398215074775049l)).block();
                 channel.createMessage("Daily Rizzsczenski post <a:Nerdge:1037714990985138186>").block();
-                channel.createMessage("https://cdn.discordapp.com/attachments/1042034256286863410/1058083626232860712/Rizzsczenski.png").block();
+                channel.createMessage(RizzImages.getRizz()).block();
 
                 log.info("Scheduler created daily rizzsczenski message");
             }
