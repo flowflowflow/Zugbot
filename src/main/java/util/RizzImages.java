@@ -1,7 +1,17 @@
 package util;
 
-import java.util.Random;
+import discord4j.common.util.Snowflake;
+import discord4j.core.GatewayDiscordClient;
+import discord4j.core.object.entity.channel.MessageChannel;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Date;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
+@Slf4j
 public final class RizzImages {
 
     private RizzImages() {
@@ -18,5 +28,22 @@ public final class RizzImages {
         int i = random.nextInt(0, 3);
 
         return images[i];
+    }
+
+    public static void scheduleRizzImage(GatewayDiscordClient discordClient) {
+
+        GatewayDiscordClient client = discordClient;
+        Date date=new Date();
+        Timer timer = new Timer();
+
+        timer.schedule(new TimerTask(){
+            public void run(){
+                MessageChannel channel = (MessageChannel) client.getChannelById(Snowflake.of(509398215074775049l)).block();
+                channel.createMessage("Daily Rizzsczenski post <a:Nerdge:1037714990985138186>").block();
+                channel.createMessage(getRizz()).block();
+
+                log.info("Scheduler created daily rizzsczenski message");
+            }
+        },date, 24*60*60*1000);
     }
 }
