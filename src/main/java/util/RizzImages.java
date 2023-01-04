@@ -19,13 +19,16 @@ public final class RizzImages {
     }
 
     public static String getRizz() {
-        final String[] images = new String[3];
+        final String[] images = new String[5];
         images[0] = "https://cdn.discordapp.com/attachments/1042034256286863410/1058083626232860712/Rizzsczenski.png";
         images[1] = "https://cdn.discordapp.com/attachments/1042034256286863410/1059389197082951680/EkQqMsiU4AAMcus_2.png";
         images[2] = "https://cdn.discordapp.com/attachments/1042034256286863410/1059391516503707678/the-best-korean-musical-dramas-that-you-must-watch.jpg";
+        images[3] = "https://cdn.discordapp.com/attachments/1042034256286863410/1060103693460049920/FlfjEF0WAAMo5Xl.jpg";
+        images[4] = "https://cdn.discordapp.com/attachments/1042034256286863410/1060105789731262514/Tom_Familiy_rizz.png";
 
         Random random = new Random();
-        int i = random.nextInt(0, 3);
+        int i = random.nextInt(0, 5);
+        log.info("Random RizzImages number generated: " + i);
 
         return images[i];
     }
