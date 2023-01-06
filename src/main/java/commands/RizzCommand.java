@@ -2,17 +2,17 @@ package commands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import reactor.core.publisher.Mono;
+import util.RizzImages;
 
-public class MatchHistoryCommand implements SlashCommand {
+public class RizzCommand implements SlashCommand {
     @Override
     public String getName() {
-        return "matchhistory";
+        return "rizz";
     }
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent event) {
-
-
-        return null;
+        return event
+                .reply(RizzImages.getRizz());
     }
 }
