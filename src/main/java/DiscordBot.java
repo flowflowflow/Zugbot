@@ -6,7 +6,6 @@ import listeners.MessageCommandListener;
 import listeners.SlashCommandListener;
 import lombok.extern.slf4j.Slf4j;
 import util.Constants;
-import util.RizzImages;
 
 import java.util.List;
 import java.util.Random;
@@ -18,9 +17,9 @@ public class DiscordBot {
         // hard coded list of available commands in /resources/commands
         // see https://github.com/Discord4J/example-projects/commit/567ec1c432d9fb7457423e3950a4c2e2ec87319f
         final List<String> commands = List.of("greet.json", "ping.json", "roulette.json",
-                "cringe.json", "weather.json", "play.json",
+                "cringe.json",
                 "uncringe.json", "randomgif.json",
-                "addserver.json", "rizz.json");
+                "addserver.json", "rizz.json", "play.json", "join.json", "disconnect.json");
 
         Random random = new Random();
 
@@ -43,7 +42,8 @@ public class DiscordBot {
         }
 
         //Daily Rizzsczenski post
-        RizzImages.scheduleRizzImage(client);
+        //todo enable again
+        //RizzImages.scheduleRizzImage(client);
 
         client.on(ChatInputInteractionEvent.class, SlashCommandListener::handle).subscribe();
 

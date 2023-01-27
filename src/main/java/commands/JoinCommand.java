@@ -1,23 +1,22 @@
 package commands;
 
 import audio.LavaPlayerAudioProvider;
-import audio.TrackScheduler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.track.playback.NonAllocatingAudioFrameBuffer;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
+import discord4j.core.object.VoiceState;
+import discord4j.core.object.entity.Member;
 import discord4j.voice.AudioProvider;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
-
-public class PlayCommand implements SlashCommand {
+public class JoinCommand implements SlashCommand{
 
     @Override
     public String getName() {
-        return "play";
+        return "join";
     }
 
     @Override
@@ -34,11 +33,11 @@ public class PlayCommand implements SlashCommand {
         // We will be creating LavaPlayerAudioProvider in the next step
         AudioProvider provider = new LavaPlayerAudioProvider(player);
 
-        final TrackScheduler scheduler = new TrackScheduler(player);
-
-        return Mono.justOrEmpty(event.getInteraction().getMessage().get().getContent())
-                .map(content -> Arrays.asList(content.split(" ")))
-                .doOnNext(command -> playerManager.loadItem(command.get(1), scheduler))
-                .then();
+        return Mono.justOrEmpty(event.getInteraction().getMember()).flatMap(Member::getVoiceState)
+                .flatMap(VoiceState::getChannel)
+                // join returns a VoiceConnection which would be required if we were
+                // adding disconnection features, but for now we are just ignoring it.
+                .flatMap(channel -> channel.join().withProvider(provider))
+                .then(event.reply().withEphemeral(true).withContent("Connected!"));
     }
 }

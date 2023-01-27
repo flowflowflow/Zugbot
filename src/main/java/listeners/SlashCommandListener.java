@@ -18,7 +18,9 @@ public class SlashCommandListener {
         commands.add(new AddServerCommand());
         commands.add(new RouletteCommand());
         commands.add(new RizzCommand());
-
+        commands.add(new PlayCommand());
+        commands.add(new JoinCommand());
+        commands.add(new DisconnectCommand());
     }
 
     public static Mono<Void> handle(ChatInputInteractionEvent event) {
