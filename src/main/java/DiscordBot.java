@@ -2,10 +2,13 @@ import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.MessageInteractionEvent;
+import discord4j.core.event.domain.message.MessageCreateEvent;
 import listeners.MessageCommandListener;
 import listeners.SlashCommandListener;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 import util.Constants;
+import util.RizzImages;
 
 import java.util.List;
 import java.util.Random;
@@ -19,7 +22,8 @@ public class DiscordBot {
         final List<String> commands = List.of("greet.json", "ping.json", "roulette.json",
                 "cringe.json",
                 "uncringe.json", "randomgif.json",
-                "addserver.json", "rizz.json", "play.json", "join.json", "disconnect.json");
+                "addserver.json", "rizz.json");
+        //, "play.json", "join.json", "disconnect.json");
 
         Random random = new Random();
 
@@ -42,10 +46,20 @@ public class DiscordBot {
         }
 
         //Daily Rizzsczenski post
-        //todo enable again
-        //RizzImages.scheduleRizzImage(client);
+        RizzImages.scheduleRizzImage(client);
 
         client.on(ChatInputInteractionEvent.class, SlashCommandListener::handle).subscribe();
+
+        client.on(MessageCreateEvent.class, event ->{
+            String message = event.getMessage().getContent();
+
+            if(message.contains("9gag")) {
+                event.getMessage().delete().block();
+                log.info("Message " + event.getMessage().getId().asString() + " by " + event.getMember().get().getDisplayName() + " deleted");
+            }
+
+            return Mono.empty();
+        }).subscribe();
 
         client.on(MessageInteractionEvent.class, MessageCommandListener::handle)
                 .then(client.onDisconnect())
