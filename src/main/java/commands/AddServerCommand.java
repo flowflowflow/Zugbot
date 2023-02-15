@@ -81,6 +81,20 @@ public class AddServerCommand implements SlashCommand {
                         .timestamp(Instant.now())
                         .build();
                 break;
+            case "zomboid":
+                embed = EmbedCreateSpec
+                        .builder()
+                        .color(Color.RUBY)
+                        .title(title)
+                        .author("Zugbot", "https://discord4j.com", "https://cdn.discordapp.com/attachments/1042034256286863410/1042059572363411577/Md3E3Sp_-_Copy.png")
+                        .description(description)
+                        .thumbnail("https://cdn.discordapp.com/attachments/1042034256286863410/1075489159772381194/zomboid_icon-6.png")
+                        .addField("IP address", connectionDetails, false)
+                        .addField("Password", password, false)
+                        .image("https://cdn.discordapp.com/attachments/1042034256286863410/1075489305193099415/zomboid.jpg")
+                        .timestamp(Instant.now())
+                        .build();
+                break;
             default:
                 preset = "default";
                 embed = EmbedCreateSpec

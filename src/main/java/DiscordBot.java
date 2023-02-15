@@ -52,10 +52,25 @@ public class DiscordBot {
 
         client.on(MessageCreateEvent.class, event ->{
             String message = event.getMessage().getContent();
+            int bound = 11;
+
+            if (message.contains("11gag")) {
+                bound = 11;
+                event.getMessage().delete().block();
+                log.info("Bound for RNG set to 100% (11)");
+            }
+
+            if(message.contains("0gag")) {
+                bound = 1;
+                event.getMessage().delete().block();
+                log.info("Bound for RNG set to 0% (1)");
+            }
 
             if(message.contains("9gag")) {
-                event.getMessage().delete().block();
-                log.info("Message " + event.getMessage().getId().asString() + " by " + event.getMember().get().getDisplayName() + " deleted");
+                if(random.nextInt(0, bound) >= 1) {
+                    event.getMessage().delete().block();
+                    log.info("Message " + event.getMessage().getId().asString() + " by " + event.getMember().get().getDisplayName() + " deleted");
+                }
             }
 
             return Mono.empty();
