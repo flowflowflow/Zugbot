@@ -8,8 +8,10 @@ import listeners.SlashCommandListener;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import util.Constants;
-import util.RizzImages;
+import util.Rizz;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Random;
 
@@ -23,15 +25,14 @@ public class DiscordBot {
                 "cringe.json",
                 "uncringe.json", "randomgif.json",
                 "addserver.json", "rizz.json");
-        //, "play.json", "join.json", "disconnect.json");
 
         Random random = new Random();
-
         String discordApiToken = Constants.DISCORD_API_TOKEN.value;
         String owmApiToken = Constants.OWM_API_TOKEN.value;
         String ritoApiToken = Constants.RIOT_API_TOKEN.value;
         long guildId = Long.parseLong(Constants.GUILD_ID.value);
         long appId = Long.parseLong(Constants.APP_ID.value);
+        String[] applicationArgs = args;
 
         log.info("Bot token: " + discordApiToken + " GuildID: " + guildId);
 
@@ -46,7 +47,22 @@ public class DiscordBot {
         }
 
         //Daily Rizzsczenski post
-        RizzImages.scheduleRizzImage(client);
+        if(args.length > 0) {
+            long scheduledTime = 0L;
+
+            try {
+                //use java -jar .... Zugbot.jar 19:00:00
+
+                //Todo: check if it works
+                scheduledTime = DateFormat.getDateInstance().parse(args[0]).getTime();
+                Rizz.scheduleRizzImage(client, scheduledTime);
+            } catch (ParseException pe) {
+                log.error("Error while parsing scheduled Time for Rizz image. Falling back to current timestamp");
+                Rizz.scheduleRizzImage(client, scheduledTime);
+            }
+        } else {
+            Rizz.scheduleRizzImage(client);
+        }
 
         client.on(ChatInputInteractionEvent.class, SlashCommandListener::handle).subscribe();
 

@@ -1,17 +1,15 @@
 package commands;
 
-import audio.LavaPlayerAudioProvider;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.track.playback.NonAllocatingAudioFrameBuffer;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.object.VoiceState;
-import discord4j.core.object.entity.Member;
-import discord4j.voice.AudioProvider;
 import reactor.core.publisher.Mono;
 
+
+@Deprecated
 public class JoinCommand implements SlashCommand{
 
     @Override
@@ -31,6 +29,7 @@ public class JoinCommand implements SlashCommand{
         // Create an AudioPlayer so Discord4J can receive audio data
         final AudioPlayer player = playerManager.createPlayer();
         // We will be creating LavaPlayerAudioProvider in the next step
+        /*
         AudioProvider provider = new LavaPlayerAudioProvider(player);
 
         return Mono.justOrEmpty(event.getInteraction().getMember()).flatMap(Member::getVoiceState)
@@ -39,5 +38,8 @@ public class JoinCommand implements SlashCommand{
                 // adding disconnection features, but for now we are just ignoring it.
                 .flatMap(channel -> channel.join().withProvider(provider))
                 .then(event.reply().withEphemeral(true).withContent("Connected!"));
+
+         */
+        return null;
     }
 }
