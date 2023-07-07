@@ -5,7 +5,10 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.channel.MessageChannel;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Slf4j
 public final class Rizz {
@@ -15,19 +18,17 @@ public final class Rizz {
     }
 
     public static String getRizz() {
-        final List<String> imagesList = new ArrayList<>();
-
-        imagesList.add("https://cdn.discordapp.com/attachments/1042034256286863410/1061592141622681640/FlfjEF0WAAMo5Xl__v2.jpg");
-        imagesList.add("https://cdn.discordapp.com/attachments/1042034256286863410/1060105789731262514/Tom_Familiy_rizz.png");
-        imagesList.add("https://cdn.discordapp.com/attachments/1042034256286863410/1062555835345162331/Schizzler.jpg");
-        imagesList.add("https://cdn.discordapp.com/attachments/1042034256286863410/1123809968458584074/fee81262-9cd8-4334-ae1c-fad1a7c2bed1.jpg");
-        imagesList.add("https://cdn.discordapp.com/attachments/1042034256286863410/1124190087312330802/7377bbb1-78d7-4f68-a60e-4d5f6384e8da_cleanup_waifu2x_photo_noise0_scale_waifu2x_photo_noise0_scale.png");
+        final String[] images = new String[7];
+        images[0] = "https://cdn.discordapp.com/attachments/1042034256286863410/1061592141622681640/FlfjEF0WAAMo5Xl__v2.jpg";
+        images[1] = "https://cdn.discordapp.com/attachments/1042034256286863410/1060105789731262514/Tom_Familiy_rizz.png";
+        images[2] = "https://cdn.discordapp.com/attachments/1042034256286863410/1062555835345162331/Schizzler.jpg";
+        images[3] = "https://cdn.discordapp.com/attachments/1042034256286863410/1123809968458584074/fee81262-9cd8-4334-ae1c-fad1a7c2bed1.jpg";
 
         Random random = new Random();
-        int i = random.nextInt(imagesList.size());
-        log.info("List index " + i + " selected");
+        int i = random.nextInt(0, images.length);
+        log.info("Random RizzImages number generated: " + i);
 
-        return imagesList.get(i);
+        return images[i];
     }
 
 
