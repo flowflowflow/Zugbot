@@ -73,13 +73,13 @@ public class DiscordBot {
             if (message.contains("11gag")) {
                 bound = 11;
                 event.getMessage().delete().block();
-                log.info("Bound for RNG set to 100% (11)");
+                log.info("Blocking 9gag");
             }
 
             if(message.contains("0gag")) {
                 bound = 1;
                 event.getMessage().delete().block();
-                log.info("Bound for RNG set to 0% (1)");
+                log.info("Unblocking 9gag");
             }
 
             if(message.contains("9gag")) {
