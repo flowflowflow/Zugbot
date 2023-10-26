@@ -8,6 +8,7 @@ import listeners.SlashCommandListener;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import util.Constants;
+import util.GuildCommandRegistrar;
 import util.Rizz;
 
 import java.text.DateFormat;
@@ -39,8 +40,7 @@ public class DiscordBot {
         final GatewayDiscordClient client = DiscordClientBuilder.create(discordApiToken).build().login().block();
 
         try {
-            //use guildcommands for testing because they don't have a one-hour delay
-            //new GlobalCommandRegistrar(client.getRestClient()).registerCommands();
+            //new util.GlobalCommandRegistrar(client.getRestClient()).registerCommands();
             new GuildCommandRegistrar(client.getRestClient()).registerCommands(commands);
         } catch (Exception e) {
             log.error("Failed command registration", e);
@@ -52,7 +52,6 @@ public class DiscordBot {
 
             try {
                 //use java -jar .... Zugbot.jar 19:00:00
-
                 //Todo: check if it works
                 scheduledTime = DateFormat.getDateInstance().parse(args[0]).getTime();
                 Rizz.scheduleRizzImage(client, scheduledTime);

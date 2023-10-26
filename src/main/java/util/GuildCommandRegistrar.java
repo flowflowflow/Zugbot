@@ -1,53 +1,80 @@
+package util;
+
 import discord4j.common.JacksonResources;
 import discord4j.discordjson.json.ApplicationCommandData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.RestClient;
 import discord4j.rest.service.ApplicationService;
-import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
-import java.net.URISyntaxException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Slf4j
-public class GlobalCommandRegistrar {
-
+public class GuildCommandRegistrar {
     private final RestClient restClient;
-
-    // The name of the folder the commands json is in, inside our resources folder
+    //Folder the command JSONs are located in
     private static final String commandsFolderName = "commands/";
 
-    public GlobalCommandRegistrar(RestClient restClient) {
+    public GuildCommandRegistrar(RestClient restClient) {
         this.restClient = restClient;
     }
 
     //Since this will only run once on startup, blocking is okay.
-    protected void registerCommands(List<String> fileNames) throws IOException {
+    public void registerCommands(List<String> fileNames) throws IOException {
         //Create an ObjectMapper that supports Discord4J classes
         final JacksonResources d4jMapper = JacksonResources.create();
 
         // Convenience variables for the sake of easier to read code below
         final ApplicationService applicationService = restClient.getApplicationService();
         final long applicationId = restClient.getApplicationId().block();
+        final long guildId = Long.parseLong(Constants.GUILD_ID.value);
+
+        //These are commands already registered with discord from previous runs of the bot
+        //Bot needs permission to create commands
+        Map<String, ApplicationCommandData> discordCommands = applicationService
+                .getGuildApplicationCommands(applicationId, guildId)
+                .collectMap(ApplicationCommandData::name)
+                .block();
+
 
         //Get our commands json from resources as command data
-        List<ApplicationCommandRequest> commands = new ArrayList<>();
+        Map<String, ApplicationCommandRequest> commands = new HashMap<>();
         for (String json : getCommandsJson(fileNames)) {
+            System.out.println("Found command json: " + json);
+
             ApplicationCommandRequest request = d4jMapper.getObjectMapper()
                     .readValue(json, ApplicationCommandRequest.class);
 
-            commands.add(request); //Add to our array list
+            commands.put(request.name(), request); //Add to our array list
+
+            //Check if this is a new command that has not already been registered.
+            if (!discordCommands.containsKey(request.name())) {
+                //Not yet created with discord, let's do it now.
+                applicationService.createGuildApplicationCommand(applicationId, guildId, request).block();
+            }
         }
 
-        /* Bulk overwrite commands. This is now idempotent, so it is safe to use this even when only 1 command
-        is changed/added/removed
-        */
-        applicationService.bulkOverwriteGlobalApplicationCommand(applicationId, commands)
-                .doOnNext(cmd -> log.debug("Successfully registered Global Command " + cmd.name()))
-                .doOnError(e -> log.error("Failed to register global commands", e))
-                .subscribe();
+        //Check if any commands have been deleted or changed.
+        for (ApplicationCommandData discordCommand : discordCommands.values()) {
+            long discordCommandId = Long.parseLong(String.valueOf(discordCommand.id()));
+
+            ApplicationCommandRequest command = commands.get(discordCommand.name());
+
+            if (command == null) {
+                //Removed command.json, delete guild command
+                applicationService.deleteGuildApplicationCommand(applicationId, guildId, discordCommandId).block();
+                continue; //Skip further processing on this command.
+            }
+
+            //Check if the command has been changed and needs to be updated.
+            if (hasChanged(discordCommand, command)) {
+                applicationService.modifyGuildApplicationCommand(applicationId, guildId, discordCommandId, command).block();
+            }
+        }
     }
 
 
@@ -71,30 +98,22 @@ public class GlobalCommandRegistrar {
     /* The two below methods are boilerplate that can be completely removed when using Spring Boot */
 
     private static List<String> getCommandsJson(List<String> fileNames) throws IOException {
-        //The name of the folder the commands json is in, inside our resources folder
-        final String commandsFolderName = "commands/";
-
         //Get the folder as a resource
-        URL url = GlobalCommandRegistrar.class.getClassLoader().getResource(commandsFolderName);
+        URL url = GuildCommandRegistrar.class.getClassLoader().getResource(commandsFolderName);
         Objects.requireNonNull(url, commandsFolderName + " could not be found");
-
-        File folder;
-        try {
-            folder = new File(url.toURI());
-        } catch (URISyntaxException e) {
-            folder = new File(url.getPath());
-        }
 
         //Get all the files inside this folder and return the contents of the files as a list of strings
         List<String> list = new ArrayList<>();
-        File[] files = Objects.requireNonNull(folder.listFiles(), folder + " is not a directory");
 
         for (String file : fileNames) {
             String resourceFileAsString = getResourceFileAsString(commandsFolderName + file);
             list.add(Objects.requireNonNull(resourceFileAsString, "Command file not found: " + file));
         }
+
         return list;
     }
+
+
 
     /**
      * Gets a specific resource file as String

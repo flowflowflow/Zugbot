@@ -77,7 +77,7 @@ public class AddServerCommand implements SlashCommand {
                         .thumbnail("https://cdn.discordapp.com/attachments/871187487815503902/984999860585521162/pack__1_.jpg")
                         .addField("IP address", connectionDetails, false)
                         .addField("Password", password, false)
-                        .image("https://cdn.discordapp.com/attachments/1042034256286863410/1042065561804345504/minecraft-1-19-the-wild-update-will-be-officially-released-on-june-7.jpg")
+                        .image("https://cdn.discordapp.com/attachments/1042034256286863410/1167140039088685056/Trails_And_Tales_Header.png")
                         .timestamp(Instant.now())
                         .build();
                 break;
