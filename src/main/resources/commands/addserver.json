@@ -28,7 +28,7 @@
     },
     {
       "name": "preset",
-      "description": "Preset type (Valheim, Minecraft, Zomboid). Anything else defaults to a standard Embed",
+      "description": "Preset type (Valheim, Minecraft, Zomboid, SotF). Anything else defaults to a standard Embed",
       "type": 3,
       "required": true
     }
