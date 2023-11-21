@@ -3,6 +3,7 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.MessageInteractionEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.channel.MessageChannel;
 import listeners.MessageCommandListener;
 import listeners.SlashCommandListener;
 import lombok.extern.slf4j.Slf4j;
@@ -51,8 +52,6 @@ public class DiscordBot {
             long scheduledTime = 0L;
 
             try {
-                //use java -jar .... Zugbot.jar 19:00:00
-                //Todo: check if it works
                 scheduledTime = DateFormat.getDateInstance().parse(args[0]).getTime();
                 Rizz.scheduleRizzImage(client, scheduledTime);
             } catch (ParseException pe) {
@@ -86,6 +85,20 @@ public class DiscordBot {
                     event.getMessage().delete().block();
                     log.info("Message " + event.getMessage().getId().asString() + " by " + event.getMember().get().getDisplayName() + " deleted");
                 }
+            }
+
+            if(message.contains("https://x.com") || message.contains("https://twitter.com")) {
+                MessageChannel channel = event.getMessage().getChannel().block();
+                String authorId = event.getMessage().getAuthor().get().getId().asString();
+                String authorName = "<@".concat(authorId).concat(">");
+                String original = event.getMessage().getContent();
+                String urlPath = original.substring(original.indexOf("/", 8));
+
+                event.getMessage().delete().block();
+                channel.createMessage(authorName + ": ").block();
+                channel.createMessage("https://fxtwitter.com".concat(urlPath)).block();
+
+                log.info("EmbedFix: Changed " + original + " to " + "https://fxtwitter.com".concat(urlPath));
             }
 
             return Mono.empty();
