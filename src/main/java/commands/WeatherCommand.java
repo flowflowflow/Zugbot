@@ -15,4 +15,6 @@ public class WeatherCommand implements SlashCommand {
                 .withEphemeral(true)
                 .withContent("not implemented yet :^)");
     }
+
+
 }

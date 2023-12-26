@@ -12,8 +12,6 @@ import util.Constants;
 import util.GuildCommandRegistrar;
 import util.Rizz;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Random;
 
@@ -26,7 +24,7 @@ public class DiscordBot {
         final List<String> commands = List.of("greet.json", "ping.json", "roulette.json",
                 "cringe.json",
                 "uncringe.json", "randomgif.json",
-                "addserver.json", "rizz.json");
+                "addserver.json"/*, "rizz.json"*/);
 
         Random random = new Random();
         String discordApiToken = Constants.DISCORD_API_TOKEN.value;
@@ -47,19 +45,13 @@ public class DiscordBot {
             log.error("Failed command registration", e);
         }
 
-        //Daily Rizzsczenski post
+        // start bot with rizz as argument
         if(args.length > 0) {
-            long scheduledTime = 0L;
-
-            try {
-                scheduledTime = DateFormat.getDateInstance().parse(args[0]).getTime();
-                Rizz.scheduleRizzImage(client, scheduledTime);
-            } catch (ParseException pe) {
-                log.error("Error while parsing scheduled Time for Rizz image. Falling back to current timestamp");
-                Rizz.scheduleRizzImage(client, scheduledTime);
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].toLowerCase().equals("rizz")) {
+                    Rizz.scheduleRizzImage(client);
+                }
             }
-        } else {
-            Rizz.scheduleRizzImage(client);
         }
 
         client.on(ChatInputInteractionEvent.class, SlashCommandListener::handle).subscribe();
