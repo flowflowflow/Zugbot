@@ -1,0 +1,30 @@
+{
+  "name": "timezone",
+  "description": "Converts provided date, time and timezone to the discord time format.",
+  "options": [
+    {
+      "name": "date",
+      "description": "Date in the format YYYY-MM-DD",
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "time",
+      "description": "Time in the format HH:MM",
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "timezone",
+      "description": "Timezone abbreviation (e.g. UTC, CET, PST)",
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "event",
+      "description": "Name of the event you want to create a universal timestamp for",
+      "type": 3,
+      "required": false
+    }
+  ]
+}
