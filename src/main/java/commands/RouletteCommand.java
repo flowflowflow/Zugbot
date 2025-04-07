@@ -34,7 +34,7 @@ public class RouletteCommand implements SlashCommand {
 
         Mono<Member> user =  event.getOption("name")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
-                .map(ApplicationCommandInteractionOptionValue::asUser).get().block().asMember(Snowflake.of(Constants.GUILD_ID.value));
+                .map(ApplicationCommandInteractionOptionValue::asUser).get().block().asMember(Snowflake.of(Constants.GUILD_ID_SWEP.value));
 
         Member member = user.block().asFullMember().block();
 

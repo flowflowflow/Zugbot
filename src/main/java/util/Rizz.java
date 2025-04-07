@@ -41,7 +41,7 @@ public final class Rizz {
         timer.schedule(new TimerTask(){
             public void run(){
                 MessageChannel channel = (MessageChannel) client.getChannelById(Snowflake.of(509398215074775049l)).block();
-                //<@509384367307751424> <a:Nerdge:1037714990985138186>
+                channel.createMessage("<@509384367307751424> <a:Nerdge:1037714990985138186>");
                 channel.createMessage("Daily Rizzsczenski post").block();
                 channel.createMessage(getRizz()).block();
 

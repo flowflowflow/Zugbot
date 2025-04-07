@@ -30,7 +30,7 @@ public class DiscordBot {
         String discordApiToken = Constants.DISCORD_API_TOKEN.value;
         String owmApiToken = Constants.OWM_API_TOKEN.value;
         String ritoApiToken = Constants.RIOT_API_TOKEN.value;
-        long guildId = Long.parseLong(Constants.GUILD_ID.value);
+        long guildId = Long.parseLong(Constants.GUILD_ID_SWEP.value);
         long appId = Long.parseLong(Constants.APP_ID.value);
         String[] applicationArgs = args;
 
@@ -48,7 +48,7 @@ public class DiscordBot {
         // start bot with rizz as argument
         if(args.length > 0) {
             for (int i = 0; i < args.length; i++) {
-                if (args[i].toLowerCase().equals("rizz")) {
+                if (args[i].equalsIgnoreCase("rizz")) {
                     Rizz.scheduleRizzImage(client);
                 }
             }

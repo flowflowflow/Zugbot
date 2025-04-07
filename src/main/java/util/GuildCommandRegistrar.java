@@ -19,6 +19,8 @@ public class GuildCommandRegistrar {
     //Folder the command JSONs are located in
     private static final String commandsFolderName = "commands/";
 
+    private List<Long> guildIds = List.of(Long.parseLong(Constants.GUILD_ID_SWEP.value), Long.parseLong(Constants.GUILD_ID_JEBBY.value));
+
     public GuildCommandRegistrar(RestClient restClient) {
         this.restClient = restClient;
     }
@@ -31,48 +33,51 @@ public class GuildCommandRegistrar {
         // Convenience variables for the sake of easier to read code below
         final ApplicationService applicationService = restClient.getApplicationService();
         final long applicationId = restClient.getApplicationId().block();
-        final long guildId = Long.parseLong(Constants.GUILD_ID.value);
 
-        //These are commands already registered with discord from previous runs of the bot
-        //Bot needs permission to create commands
-        Map<String, ApplicationCommandData> discordCommands = applicationService
-                .getGuildApplicationCommands(applicationId, guildId)
-                .collectMap(ApplicationCommandData::name)
-                .block();
+        while (guildIds.iterator().hasNext()) {
+            final long guildId = Long.parseLong(Constants.GUILD_ID_SWEP.value);
+
+            //These are commands already registered with discord from previous runs of the bot
+            //Bot needs permission to create commands
+            Map<String, ApplicationCommandData> discordCommands = applicationService
+                    .getGuildApplicationCommands(applicationId, guildId)
+                    .collectMap(ApplicationCommandData::name)
+                    .block();
 
 
-        //Get our commands json from resources as command data
-        Map<String, ApplicationCommandRequest> commands = new HashMap<>();
-        for (String json : getCommandsJson(fileNames)) {
-            System.out.println("Found command json: " + json);
+            //Get our commands json from resources as command data
+            Map<String, ApplicationCommandRequest> commands = new HashMap<>();
+            for (String json : getCommandsJson(fileNames)) {
+                System.out.println("Found command json: " + json);
 
-            ApplicationCommandRequest request = d4jMapper.getObjectMapper()
-                    .readValue(json, ApplicationCommandRequest.class);
+                ApplicationCommandRequest request = d4jMapper.getObjectMapper()
+                        .readValue(json, ApplicationCommandRequest.class);
 
-            commands.put(request.name(), request); //Add to our array list
+                commands.put(request.name(), request); //Add to our array list
 
-            //Check if this is a new command that has not already been registered.
-            if (!discordCommands.containsKey(request.name())) {
-                //Not yet created with discord, let's do it now.
-                applicationService.createGuildApplicationCommand(applicationId, guildId, request).block();
-            }
-        }
-
-        //Check if any commands have been deleted or changed.
-        for (ApplicationCommandData discordCommand : discordCommands.values()) {
-            long discordCommandId = Long.parseLong(String.valueOf(discordCommand.id()));
-
-            ApplicationCommandRequest command = commands.get(discordCommand.name());
-
-            if (command == null) {
-                //Removed command.json, delete guild command
-                applicationService.deleteGuildApplicationCommand(applicationId, guildId, discordCommandId).block();
-                continue; //Skip further processing on this command.
+                //Check if this is a new command that has not already been registered.
+                if (!discordCommands.containsKey(request.name())) {
+                    //Not yet created with discord, let's do it now.
+                    applicationService.createGuildApplicationCommand(applicationId, guildId, request).block();
+                }
             }
 
-            //Check if the command has been changed and needs to be updated.
-            if (hasChanged(discordCommand, command)) {
-                applicationService.modifyGuildApplicationCommand(applicationId, guildId, discordCommandId, command).block();
+            //Check if any commands have been deleted or changed.
+            for (ApplicationCommandData discordCommand : discordCommands.values()) {
+                long discordCommandId = Long.parseLong(String.valueOf(discordCommand.id()));
+
+                ApplicationCommandRequest command = commands.get(discordCommand.name());
+
+                if (command == null) {
+                    //Removed command.json, delete guild command
+                    applicationService.deleteGuildApplicationCommand(applicationId, guildId, discordCommandId).block();
+                    continue; //Skip further processing on this command.
+                }
+
+                //Check if the command has been changed and needs to be updated.
+                if (hasChanged(discordCommand, command)) {
+                    applicationService.modifyGuildApplicationCommand(applicationId, guildId, discordCommandId, command).block();
+                }
             }
         }
     }
@@ -114,9 +119,9 @@ public class GuildCommandRegistrar {
     }
 
 
-
     /**
      * Gets a specific resource file as String
+     *
      * @param fileName The file path omitting "resources/"
      * @return The contents of the file as a String, otherwise throws an exception
      */

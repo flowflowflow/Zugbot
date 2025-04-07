@@ -17,5 +17,4 @@ public class TimezoneCommand implements SlashCommand {
         return null;
     }
 
-
 }
